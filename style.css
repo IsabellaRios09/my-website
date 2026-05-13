@@ -10,8 +10,8 @@
 
 /* ---- Page basics ---- */
 body {
-  background-color: #BF5700;          /* burnt orange background */
-  color: #14213D;                     /* navy text for contrast  */
+  background-color: #B08F7A;          /* burnt orange background */
+  color: #5B3ll3;                     /* navy text for contrast  */
   font-family: Georgia, "Times New Roman", serif;
   max-width: 900px;
   margin: 0 auto;                     /* centers the whole page  */
@@ -22,12 +22,12 @@ body {
 /* ---- Page title ---- */
 .page-title {
   text-align: center;
-  color: #14213D;                     /* navy title */
-  background-color: #E8DCC4;          /* khaki bar behind title */
+  color: #5B3113;                     /* navy title */
+  background-color: #FFDBDD;          /* khaki bar behind title */
   font-size: 42px;
   font-weight: bold;
   padding: 20px;
-  border: 3px solid #14213D;
+  border: 3px solid #CB8D95;
   border-radius: 8px;
   letter-spacing: 1px;
 }
@@ -45,7 +45,7 @@ body {
   width: 33%;                         /* each photo takes ~one-third */
   height: 280px;                      /* all photos same height */
   object-fit: cover;                  /* crop to fill, no distortion */
-  border: 4px solid #14213D;          /* navy frame */
+  border: 4px solid #5B3113;          /* navy frame */
   border-radius: 6px;
   background-color: #FFFFFF;
 }
@@ -54,26 +54,26 @@ body {
 h3 {
   color: #FFFFFF;                     /* white headings on orange */
   font-size: 26px;
-  border-bottom: 2px solid #14213D;
+  border-bottom: 2px solid #5B3113;
   padding-bottom: 6px;
   margin-top: 30px;
 }
 
 /* ---- About Me paragraph ---- */
 .about-me {
-  background-color: #E8DCC4;          /* khaki "card" */
+  background-color: #FFDBDD;          /* khaki "card" */
   color: #14213D;
   padding: 20px 25px;
   border-radius: 8px;
-  border-left: 6px solid #14213D;
+  border-left: 6px solid #5B3113;
   font-size: 17px;
 }
 
 /* ---- Resume line ---- */
 .resume-line {
   text-align: center;
-  background-color: #FFFFFF;
-  color: #14213D;
+  background-color: #E6D2B9;
+  color: #5B3113;
   padding: 12px;
   border-radius: 6px;
   font-size: 18px;
@@ -91,8 +91,8 @@ h3 {
 
 /* ---- Lists ---- */
 ol, ul {
-  background-color: #E8DCC4;
-  color: #14213D;
+  background-color: #E6D2B9;
+  color: #5B3113;
   padding: 18px 18px 18px 45px;       /* extra left padding for bullets */
   border-radius: 8px;
   font-size: 17px;
@@ -104,7 +104,7 @@ li {
 
 /* ---- Links ---- */
 a {
-  color: #14213D;
+  color: #5B3113;
   font-weight: bold;
   text-decoration: underline;
 }
@@ -119,7 +119,7 @@ a:hover {
 /* ---- Horizontal rules ---- */
 hr {
   border: none;
-  border-top: 2px dashed #14213D;
+  border-top: 2px dashed #5B3113;
   margin: 30px 0;
 }
 
@@ -136,16 +136,16 @@ hr {
   width: 75%;
   justify-items: center;
   text-align:center;
-  border: 3px solid #14213D;
+  border: 3px solid #5B3113;
   border-radius: 6px;
-  background-color: #14213D;
+  background-color: #5B3113;
 }
 
 /* ---- Contact line ---- */
 .contact-line {
   text-align: center;
   background-color: #FFFFFF;
-  color: #14213D;
+  color: #5B3113;
   padding: 15px;
   border-radius: 6px;
   font-size: 17px;
@@ -159,7 +159,7 @@ hr {
   font-size: 13px;
   margin-top: 40px;
   padding: 15px;
-  border-top: 2px solid #14213D;
+  border-top: 2px solid #5B3113;
   letter-spacing: 0.5px;
 }
 
@@ -189,3 +189,4 @@ hr {
     font-size: 15px;
   }
 }
+
