@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Creative Studio – Isabella Rios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:   #fdf6e3;
+      --paper:   #f7efe0;
+      --kraft:   #c8a96e;
+      --espresso:#3b1f0a;
+      --tomato:  #c0392b;
+      --sage:    #5a7a5b;
+      --ink:     #1a1008;
+      --shadow:  rgba(59,31,10,0.18);
+    }
+
+    body {
+      background: var(--cream);
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,150,100,0.13) 28px),
+        repeating-linear-gradient(90deg, transparent, transparent 27px, rgba(180,150,100,0.06) 28px);
+      font-family: 'Lora', Georgia, serif;
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── Nav ── */
+    .site-nav {
+      background: var(--espresso);
+      display: flex;
+      gap: 0;
+      font-family: 'Lora', serif;
+    }
+    .site-nav a {
+      color: #f5e6c8;
+      text-decoration: none;
+      padding: 12px 28px;
+      display: inline-block;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      border-right: 1px solid rgba(255,255,255,0.1);
+      transition: background 0.2s;
+    }
+    .site-nav a:hover, .site-nav a.active { background: var(--tomato); color: #fff; }
+
+    /* ── Page Header ── */
+    .page-header {
+      text-align: center;
+      padding: 36px 20px 12px;
+    }
+    .page-header h1 {
+      font-family: 'Caveat', cursive;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 700;
+      color: var(--espresso);
+      letter-spacing: 0.02em;
+    }
+    .page-header p {
+      font-style: italic;
+      color: var(--kraft);
+      margin-top: 6px;
+      font-size: 1rem;
+    }
+
+    /* ── Tab Navigation ── */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 20px 20px 0;
+    }
+    .tab-btn {
+      background: var(--paper);
+      border: 2px solid var(--kraft);
+      border-bottom: none;
+      border-radius: 10px 10px 0 0;
+      padding: 10px 30px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--espresso);
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+    }
+    .tab-btn:hover { background: var(--kraft); color: #fff; }
+    .tab-btn.active { background: var(--espresso); color: var(--cream); border-color: var(--espresso); }
+
+    /* ── Panel ── */
+    .panel-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+    .panel {
+      display: none;
+      background: var(--paper);
+      border: 2px solid var(--kraft);
+      border-radius: 0 12px 12px 12px;
+      padding: 28px 24px 32px;
+      box-shadow: 4px 6px 24px var(--shadow);
+    }
+    .panel.active { display: block; }
+
+    /* ── Sketchpad ── */
+    .sketchpad-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1.5px dashed var(--kraft);
+    }
+    .tool-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tool-group label {
+      font-family: 'Caveat', cursive;
+      font-size: 1.05rem;
+      color: var(--espresso);
+      white-space: nowrap;
+    }
+    .color-swatch {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .color-swatch:hover { transform: scale(1.2); }
+    .color-swatch.selected { border-color: var(--espresso); transform: scale(1.15); }
+
+    #brushSize {
+      -webkit-appearance: none;
+      width: 90px; height: 6px;
+      border-radius: 3px;
+      background: var(--kraft);
+      outline: none;
+      cursor: pointer;
+    }
+    #brushSize::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--espresso);
+      cursor: pointer;
+    }
+
+    .tool-btn {
+      background: var(--cream);
+      border: 2px solid var(--kraft);
+      border-radius: 8px;
+      padding: 5px 14px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.05rem;
+      color: var(--espresso);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .tool-btn:hover { background: var(--kraft); color: #fff; }
+    .tool-btn.active-tool { background: var(--espresso); color: var(--cream); border-color: var(--espresso); }
+
+    #sketchCanvas {
+      display: block;
+      width: 100%;
+      height: 460px;
+      border-radius: 8px;
+      border: 2px solid var(--kraft);
+      cursor: crosshair;
+      background: #fff;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .canvas-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      background: var(--espresso);
+      color: var(--cream);
+      border: none;
+      border-radius: 8px;
+      padding: 8px 20px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .action-btn:hover { background: var(--tomato); }
+    .action-btn.secondary {
+      background: var(--paper);
+      color: var(--espresso);
+      border: 2px solid var(--kraft);
+    }
+    .action-btn.secondary:hover { background: var(--kraft); color: #fff; }
+
+    /* ── Recipe Card Generator ── */
+    .recipe-section h2 {
+      font-family: 'Caveat', cursive;
+      font-size: 1.6rem;
+      color: var(--espresso);
+      margin-bottom: 6px;
+    }
+    .recipe-section p.subtitle {
+      font-style: italic;
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    .recipe-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 580px) { .recipe-form { grid-template-columns: 1fr; } }
+
+    .recipe-form label {
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      color: var(--espresso);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .recipe-form input,
+    .recipe-form select,
+    .recipe-form textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 2px solid var(--kraft);
+      border-radius: 8px;
+      background: #fff;
+      font-family: 'Lora', serif;
+      font-size: 0.9rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .recipe-form input:focus,
+    .recipe-form select:focus,
+    .recipe-form textarea:focus { border-color: var(--espresso); }
+    .recipe-form textarea { min-height: 80px; resize: vertical; }
+
+    .full-width { grid-column: 1 / -1; }
+
+    .generate-btn {
+      grid-column: 1 / -1;
+      background: var(--tomato);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .generate-btn:hover { background: var(--espresso); transform: translateY(-1px); }
+    .generate-btn:disabled { background: #aaa; cursor: not-allowed; transform: none; }
+
+    /* ── Generated Recipe Card ── */
+    #recipeOutput { margin-top: 24px; }
+
+    .recipe-card {
+      background: #fff;
+      border: 2px solid var(--kraft);
+      border-radius: 14px;
+      padding: 28px 30px;
+      box-shadow: 4px 5px 18px var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .recipe-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 8px; height: 100%;
+      background: repeating-linear-gradient(180deg, var(--tomato) 0, var(--tomato) 30px, var(--sage) 30px, var(--sage) 60px);
+    }
+    .recipe-card-inner { padding-left: 16px; }
+
+    .recipe-card h2 {
+      font-family: 'Caveat', cursive;
+      font-size: 2rem;
+      color: var(--espresso);
+      margin-bottom: 4px;
+    }
+    .recipe-meta {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .recipe-meta span {
+      font-size: 0.85rem;
+      color: var(--sage);
+      font-style: italic;
+    }
+    .recipe-meta strong { color: var(--espresso); font-style: normal; }
+
+    .recipe-card h3 {
+      font-family: 'Caveat', cursive;
+      font-size: 1.3rem;
+      color: var(--tomato);
+      border-bottom: 1.5px dashed var(--kraft);
+      padding-bottom: 4px;
+      margin: 16px 0 10px;
+    }
+    .recipe-card ul, .recipe-card ol {
+      padding-left: 20px;
+      line-height: 1.85;
+      font-size: 0.93rem;
+    }
+    .recipe-card p {
+      line-height: 1.7;
+      font-size: 0.93rem;
+      color: #555;
+    }
+    .recipe-card .chef-note {
+      background: var(--cream);
+      border-left: 4px solid var(--kraft);
+      padding: 10px 14px;
+      margin-top: 16px;
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      font-size: 0.88rem;
+      color: #666;
+    }
+
+    .loading-dots span {
+      animation: blink 1.2s infinite;
+      font-size: 1.4rem;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%,80%,100%{opacity:0} 40%{opacity:1} }
+
+    .error-msg {
+      background: #fdecea;
+      border: 2px solid var(--tomato);
+      border-radius: 8px;
+      padding: 14px 18px;
+      color: var(--tomato);
+      font-size: 0.93rem;
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      text-align: center;
+      padding: 18px;
+      font-size: 0.8rem;
+      color: #aaa;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a href="index.html">🤎 Home</a>
+    <a href="creative.html" class="active">☁️ Creative Studio</a>
+  </nav>
+
+  <header class="page-header">
+    <h1>✏️ Isabella's Creative Studio</h1>
+    <p>A little corner for drawing & winding down!</p>
+  </header>
+
+  <!-- Tab buttons -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('sketch', this)">🖌️ Sketchpad</button>
+
+    <!-- ══ SKETCHPAD PANEL ══ -->
+    <div id="panel-sketch" class="panel active">
+      <div class="sketchpad-toolbar">
+
+        <!-- Colors -->
+        <div class="tool-group">
+          <label>Color:</label>
+          <div id="colorPalette" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+          <input type="color" id="customColor" title="Custom color" style="width:28px;height:28px;border:none;cursor:pointer;border-radius:50%;padding:0;background:none;" />
+        </div>
+
+        <!-- Brush size -->
+        <div class="tool-group">
+          <label>Size:</label>
+          <input type="range" id="brushSize" min="1" max="40" value="6" />
+          <span id="brushSizeLabel" style="font-family:Caveat,cursive;font-size:1rem;color:var(--espresso);min-width:28px;">6</span>
+        </div>
+
+        <!-- Tools -->
+        <div class="tool-group">
+          <button class="tool-btn active-tool" id="btnDraw" onclick="setTool('draw')">✏️ Draw</button>
+          <button class="tool-btn" id="btnErase" onclick="setTool('erase')">🩹 Erase</button>
+          <button class="tool-btn" id="btnFill" onclick="setTool('fill')">🪣 Fill</button>
+        </div>
+
+        <!-- Opacity -->
+        <div class="tool-group">
+          <label>Opacity:</label>
+          <input type="range" id="opacitySlider" min="5" max="100" value="100" style="width:70px;" />
+        </div>
+      </div>
+
+      <canvas id="sketchCanvas"></canvas>
+
+      <div class="canvas-actions">
+        <button class="action-btn" onclick="downloadCanvas()">⬇️ Save Drawing</button>
+        <button class="action-btn secondary" onclick="undoLast()">↩️ Undo</button>
+        <button class="action-btn secondary" onclick="clearCanvas()">🗑️ Clear</button>
+      </div>
+    </div>
+
+    <!-- ══ RECIPE CARD PANEL ══ -->
+    <div id="panel-recipe" class="panel">
+      <div class="recipe-section">
+        <h2>🍳 Recipe Card Maker</h2>
+        <p class="subtitle">Tell me what you're cooking and I'll generate a beautiful recipe card for you!</p>
+
+        <div class="recipe-form">
+          <div>
+            <label for="dishName">Dish Name</label>
+            <input type="text" id="dishName" placeholder="e.g. Spicy Mango Tacos" />
+          </div>
+          <div>
+            <label for="cuisine">Cuisine Style</label>
+            <select id="cuisine">
+              <option value="any">Any / Fusion</option>
+              <option value="Mexican">Mexican</option>
+              <option value="Italian">Italian</option>
+              <option value="Asian">Asian</option>
+              <option value="American">American</option>
+              <option value="Mediterranean">Mediterranean</option>
+              <option value="Indian">Indian</option>
+              <option value="French">French</option>
+            </select>
+          </div>
+          <div>
+            <label for="servings">Servings</label>
+            <input type="number" id="servings" value="4" min="1" max="20" />
+          </div>
+          <div>
+            <label for="difficulty">Difficulty</label>
+            <select id="difficulty">
+              <option value="Easy">Easy</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Advanced">Advanced</option>
+            </select>
+          </div>
+          <div class="full-width">
+            <label for="extraNotes">Any special notes, dietary needs, or key ingredients?</label>
+            <textarea id="extraNotes" placeholder="e.g. vegetarian, uses leftover rice, must include lime..."></textarea>
+          </div>
+          <button class="generate-btn" id="generateBtn" onclick="generateRecipe()">✨ Generate My Recipe Card</button>
+        </div>
+
+        <div id="recipeOutput"></div>
+      </div>
+    </div>
+
+  </div><!-- /.panel-wrap -->
+
+  <footer class="page-footer">Copyright &copy; 2026 Isabella Rios. All Rights Reserved.</footer>
+
+<script>
+/* ══════════════════════════════
+   TAB SWITCHING
+══════════════════════════════ */
+function switchTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'sketch') resizeCanvas();
+}
+
+/* ══════════════════════════════
+   SKETCHPAD
+══════════════════════════════ */
+const canvas = document.getElementById('sketchCanvas');
+const ctx = canvas.getContext('2d');
+let painting = false;
+let currentTool = 'draw';
+let currentColor = '#3b1f0a';
+let history = [];
+
+const palette = [
+  '#3b1f0a','#c0392b','#5a7a5b','#c8a96e',
+  '#f39c12','#2980b9','#8e44ad','#1abc9c',
+  '#e74c3c','#ecf0f1','#2c3e50','#ffffff'
+];
+
+function buildPalette() {
+  const el = document.getElementById('colorPalette');
+  palette.forEach(c => {
+    const s = document.createElement('div');
+    s.className = 'color-swatch' + (c === currentColor ? ' selected' : '');
+    s.style.background = c;
+    s.style.border = c === '#ffffff' ? '2px solid #ccc' : '2px solid transparent';
+    s.onclick = () => pickColor(c, s);
+    el.appendChild(s);
+  });
+}
+
+function pickColor(c, swatch) {
+  currentColor = c;
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+  if (swatch) swatch.classList.add('selected');
+  if (currentTool === 'erase') setTool('draw');
+}
+
+document.getElementById('customColor').addEventListener('input', function() {
+  pickColor(this.value, null);
+});
+
+const brushSlider = document.getElementById('brushSize');
+const brushLabel  = document.getElementById('brushSizeLabel');
+brushSlider.addEventListener('input', () => { brushLabel.textContent = brushSlider.value; });
+
+function setTool(t) {
+  currentTool = t;
+  ['draw','erase','fill'].forEach(n => {
+    document.getElementById('btn' + n.charAt(0).toUpperCase() + n.slice(1))
+      .classList.toggle('active-tool', n === t);
+  });
+  canvas.style.cursor = t === 'fill' ? 'cell' : 'crosshair';
+}
+
+function resizeCanvas() {
+  const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.putImageData(img, 0, 0);
+}
+
+function saveHistory() {
+  history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+  if (history.length > 30) history.shift();
+}
+
+function undoLast() {
+  if (history.length === 0) return;
+  ctx.putImageData(history.pop(), 0, 0);
+}
+
+function getPos(e) {
+  const r = canvas.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return { x: (src.clientX - r.left) * (canvas.width / r.width),
+           y: (src.clientY - r.top)  * (canvas.height / r.height) };
+}
+
+function startDraw(e) {
+  e.preventDefault();
+  if (currentTool === 'fill') { saveHistory(); floodFill(getPos(e)); return; }
+  saveHistory();
+  painting = true;
+  const p = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+}
+
+function draw(e) {
+  e.preventDefault();
+  if (!painting) return;
+  const opacity = document.getElementById('opacitySlider').value / 100;
+  const size = parseInt(brushSlider.value);
+  const p = getPos(e);
+  ctx.lineWidth = size;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.globalAlpha = opacity;
+  if (currentTool === 'erase') {
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.strokeStyle = 'rgba(0,0,0,1)';
+  } else {
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.strokeStyle = currentColor;
+  }
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+}
+
+function stopDraw(e) {
+  if (!painting) return;
+  painting = false;
+  ctx.globalAlpha = 1;
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.beginPath();
+}
+
+canvas.addEventListener('mousedown', startDraw);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', stopDraw);
+canvas.addEventListener('mouseleave', stopDraw);
+canvas.addEventListener('touchstart', startDraw, { passive: false });
+canvas.addEventListener('touchmove', draw, { passive: false });
+canvas.addEventListener('touchend', stopDraw);
+
+/* Flood fill */
+function floodFill({ x, y }) {
+  x = Math.round(x); y = Math.round(y);
+  const w = canvas.width, h = canvas.height;
+  const imgData = ctx.getImageData(0, 0, w, h);
+  const data = imgData.data;
+  const idx = (y * w + x) * 4;
+  const targetR = data[idx], targetG = data[idx+1], targetB = data[idx+2], targetA = data[idx+3];
+  const fill = hexToRgb(currentColor);
+  if (!fill) return;
+  if (targetR===fill.r && targetG===fill.g && targetB===fill.b) return;
+
+  const stack = [[x, y]];
+  while (stack.length) {
+    const [cx, cy] = stack.pop();
+    if (cx < 0 || cx >= w || cy < 0 || cy >= h) continue;
+    const i = (cy * w + cx) * 4;
+    if (data[i] !== targetR || data[i+1] !== targetG || data[i+2] !== targetB || data[i+3] !== targetA) continue;
+    data[i] = fill.r; data[i+1] = fill.g; data[i+2] = fill.b; data[i+3] = 255;
+    stack.push([cx+1,cy],[cx-1,cy],[cx,cy+1],[cx,cy-1]);
+  }
+  ctx.putImageData(imgData, 0, 0);
+}
+
+function hexToRgb(hex) {
+  const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return r ? { r: parseInt(r[1],16), g: parseInt(r[2],16), b: parseInt(r[3],16) } : null;
+}
+
+function clearCanvas() {
+  saveHistory();
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#ffffff';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+
+function downloadCanvas() {
+  const link = document.createElement('a');
+  link.download = 'my-sketch.png';
+  link.href = canvas.toDataURL();
+  link.click();
+}
+
+/* Init canvas */
+window.addEventListener('load', () => {
+  buildPalette();
+  resizeCanvas();
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+});
+window.addEventListener('resize', resizeCanvas);
+
+/* ══════════════════════════════
+   RECIPE CARD GENERATOR (Claude API)
+══════════════════════════════ */
+async function generateRecipe() {
+  const dish      = document.getElementById('dishName').value.trim();
+  const cuisine   = document.getElementById('cuisine').value;
+  const servings  = document.getElementById('servings').value;
+  const difficulty= document.getElementById('difficulty').value;
+  const notes     = document.getElementById('extraNotes').value.trim();
+  const output    = document.getElementById('recipeOutput');
+  const btn       = document.getElementById('generateBtn');
+
+  if (!dish) {
+    output.innerHTML = '<div class="error-msg">Please enter a dish name first! 🍽️</div>';
+    return;
+  }
+
+  btn.disabled = true;
+  output.innerHTML = `<div style="text-align:center;padding:30px 0;font-family:Caveat,cursive;font-size:1.3rem;color:var(--espresso);">
+    Whipping up your recipe <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+  </div>`;
+
+  const prompt = `You are a warm, creative culinary writer creating a beautiful recipe card.
+Generate a complete, original recipe for: "${dish}"
+Cuisine style: ${cuisine}
+Servings: ${servings}
+Difficulty: ${difficulty}
+${notes ? 'Special notes: ' + notes : ''}
+
+Respond with ONLY a valid JSON object (no markdown, no backticks) in this exact format:
+{
+  "title": "Recipe Title",
+  "tagline": "A short evocative one-liner",
+  "prepTime": "15 min",
+  "cookTime": "30 min",
+  "servings": "${servings}",
+  "difficulty": "${difficulty}",
+  "ingredients": ["item 1", "item 2"],
+  "instructions": ["Step 1 text", "Step 2 text"],
+  "chefNote": "A personal tip or fun story about this dish"
+}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    const text = data.content.map(b => b.text || '').join('').replace(/```json|```/g,'').trim();
+    const recipe = JSON.parse(text);
+    renderRecipeCard(recipe);
+  } catch(err) {
+    output.innerHTML = `<div class="error-msg">
+      Oops! Couldn't generate the recipe right now. (${err.message})<br>
+      <small>Try again in a moment!</small>
+    </div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderRecipeCard(r) {
+  const ingredients = r.ingredients.map(i => `<li>${i}</li>`).join('');
+  const steps = r.instructions.map((s,i) => `<li>${s}</li>`).join('');
+
+  document.getElementById('recipeOutput').innerHTML = `
+    <div class="recipe-card">
+      <div class="recipe-card-inner">
+        <h2>${r.title}</h2>
+        <p style="font-style:italic;color:#888;margin-bottom:10px;">${r.tagline}</p>
+        <div class="recipe-meta">
+          <span>⏱ Prep: <strong>${r.prepTime}</strong></span>
+          <span>🔥 Cook: <strong>${r.cookTime}</strong></span>
+          <span>🍽️ Serves: <strong>${r.servings}</strong></span>
+          <span>⭐ ${r.difficulty}</span>
+        </div>
+        <h3>Ingredients</h3>
+        <ul>${ingredients}</ul>
+        <h3>Instructions</h3>
+        <ol>${steps}</ol>
+        ${r.chefNote ? `<div class="chef-note">💡 <strong>Chef's Note:</strong> ${r.chefNote}</div>` : ''}
+      </div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
